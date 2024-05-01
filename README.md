@@ -56,7 +56,7 @@ migration = AgnosticMigration(apply, revert)
 
 ## WHY?
 
-Having an agnostic migration tool is very helpful for 2 cases:
+Having an agnostic migration tool is very helpful for 3 cases:
 
 1. The tool you are wanting to manage is not a traditional relational database, and you want to be able to use a liquibase/flyway style migration to manage its state reliably and at scale.
 2. You want to be able to manage the migrations or state of multiple dependencies with the same tooling.
