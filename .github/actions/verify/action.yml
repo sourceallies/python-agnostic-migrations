@@ -1,0 +1,37 @@
+name: Build and Verify
+description: 'Build and verify the package'
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Setup Poetry
+      shell: bash
+      run: |
+        pipx install poetry==1.8.2
+        poetry config virtualenvs.in-project true 
+        poetry config virtualenvs.create true 
+
+    - name: cache poetry dependencies
+      id: cache-deps
+      uses: actions/cache@v4
+      with:
+        path: ./.venv
+        key: pydeps-${{ hashFiles('**/poetry.lock') }}
+
+    - name: conditionally install dependencies based on cache
+      shell: bash
+      if: steps.cache-deps.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root
+
+    - name: Build
+      shell: bash
+      run: make build
+    
+    - name: Test
+      shell: bash
+      run: make check
